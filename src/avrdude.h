@@ -28,12 +28,18 @@
 #define USER_CONF_FILE ".avrduderc"
 #endif
 
-extern char * progname;		/* name of program, for messages */
-extern char progbuf[];		/* spaces same length as progname */
+#if defined(MSVC)
+#  define IMPORT extern __declspec(dllimport)
+#else
+#  define IMPORT extern
+#endif
 
-extern int ovsigck;		/* override signature check (-F) */
-extern int verbose;		/* verbosity level (-v, -vv, ...) */
-extern int quell_progress;	/* quietness level (-q, -qq) */
+IMPORT char * progname;		/* name of program, for messages */
+IMPORT char progbuf[];		/* spaces same length as progname */
+
+IMPORT int ovsigck;		/* override signature check (-F) */
+IMPORT int verbose;		/* verbosity level (-v, -vv, ...) */
+IMPORT int quell_progress;	/* quietness level (-q, -qq) */
 
 int avrdude_message(const int msglvl, const char *format, ...);
 
