@@ -84,6 +84,12 @@ if(MSVC)
         )
 endif()
 
+if(APPLE)
+    # allow dylib to have undefined references (symbols to be imported
+    # from app)
+    add_link_options(-Wl,-undefined -Wl,dynamic_lookup)
+endif()
+
 # =====================================
 # Configure files
 # =====================================
