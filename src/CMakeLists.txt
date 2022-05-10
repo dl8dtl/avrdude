@@ -47,8 +47,11 @@ endif()
 # Setup target specific options
 # =====================================
 
-include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 add_compile_definitions(CONFIG_DIR=\"${CONFIG_DIR}\")
+include_directories(
+    BEFORE ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    )
 
 if(WIN32)
     set(EXTRA_WINDOWS_SOURCES "${PROJECT_BINARY_DIR}/src/windows.rc")
@@ -110,7 +113,7 @@ endif()
 # Project
 # =====================================
 
-add_library(libavrdude
+set(sources
     ac_cfg.h
     arduino.h
     arduino.c
@@ -217,24 +220,13 @@ add_library(libavrdude
     ${FLEX_Parser_OUTPUTS}
     ${BISON_Parser_OUTPUTS}
     )
-    
-set_target_properties(libavrdude PROPERTIES
-    PREFIX ""
-    PUBLIC_HEADER "libavrdude.h"
-    VERSION 1.0.0
-    SOVERSION 1
-    )
-
-target_include_directories(libavrdude
-    PUBLIC
+set(includes
     "${PROJECT_SOURCE_DIR}"
     "${PROJECT_BINARY_DIR}"
     "${LIBUSB_COMPAT_DIR}"
     "${EXTRA_WINDOWS_INCLUDES}"
     )
-
-target_link_libraries(libavrdude
-    PUBLIC
+set(deplibs
     ${LIB_MATH}
     ${LIB_LIBELF}
     ${LIB_LIBUSB}
@@ -247,6 +239,29 @@ target_link_libraries(libavrdude
     ${EXTRA_WINDOWS_LIBRARIES}
     )
 
+# staticlib
+add_library(staticlib STATIC ${sources})
+set_target_properties(staticlib PROPERTIES
+    PREFIX ""
+    OUTPUT_NAME "libavrdude"
+    PUBLIC_HEADER "libavrdude.h"
+    )
+target_include_directories(staticlib PUBLIC ${includes})
+target_link_libraries(staticlib PUBLIC ${deplibs})
+
+# sharedlib
+add_library(sharedlib SHARED ${sources})
+set_target_properties(sharedlib PROPERTIES
+    PREFIX ""
+    OUTPUT_NAME "libavrdude"
+    PUBLIC_HEADER "libavrdude.h"
+    VERSION 1.0.0
+    SOVERSION 1
+    )
+target_include_directories(sharedlib PUBLIC ${includes})
+target_link_libraries(sharedlib PUBLIC ${deplibs})
+
+# executable
 add_executable(avrdude
     main.c
     term.c
@@ -255,18 +270,17 @@ add_executable(avrdude
     whereami.h
     "${EXTRA_WINDOWS_SOURCES}"
     )
-
-target_link_libraries(avrdude PUBLIC libavrdude)
+target_link_libraries(avrdude PUBLIC staticlib)
 
 # =====================================
 # Install
 # =====================================
 
-install(TARGETS avrdude DESTINATION bin)
-install(TARGETS libavrdude
+install(TARGETS ${BUILT_LIBS}
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER DESTINATION include COMPONENT dev
     )
+install(TARGETS avrdude DESTINATION bin)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/avrdude.conf" TYPE SYSCONF)
 install(FILES avrdude.1 TYPE MAN)
