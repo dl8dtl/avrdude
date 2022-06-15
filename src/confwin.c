@@ -19,6 +19,7 @@
 
 #include "ac_cfg.h"
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #if defined(WIN32)

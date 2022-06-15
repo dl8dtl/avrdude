@@ -52,6 +52,7 @@
 #include <unistd.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #if defined(HAVE_LIBUSB) || (defined(WIN32) && defined(HAVE_LIBHID))

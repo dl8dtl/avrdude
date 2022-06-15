@@ -45,6 +45,7 @@
 #include <unistd.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "butterfly.h"
@@ -355,7 +356,7 @@ static int butterfly_initialize(PROGRAMMER * pgm, AVRPART * p)
   if (butterfly_vfy_cmd_sent(pgm, "select device") < 0)
       return -1;
 
-  if (verbose)
+  if (vrbose)
     avrdude_message(MSG_INFO, "%s: devcode selected: 0x%02x\n",
                     progname, (unsigned)buf[1]);
 

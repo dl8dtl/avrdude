@@ -32,6 +32,7 @@
 #include <unistd.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "flip1.h"
@@ -309,7 +310,7 @@ int flip1_initialize(PROGRAMMER* pgm, AVRPART *part)
     avrdude_message(MSG_INFO, "%s: Warning: bMaxPacketSize0 (%d) != 32, things might go wrong\n",
       progname, dfu->dev_desc.bMaxPacketSize0);
 
-  if (verbose)
+  if (vrbose)
     flip1_show_info(FLIP1(pgm));
 
   dfu_abort(dfu);

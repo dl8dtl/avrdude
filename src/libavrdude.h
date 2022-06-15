@@ -27,6 +27,36 @@
 #include <stdint.h>
 
 typedef uint32_t pinmask_t;
+typedef int (*msgfunc)(const int msglvl, const char *format, ...);
+
+#ifdef LIBAVRDUDE_BUILD
+// used when building libavrdude itself
+struct libavrdude_context
+{
+  const char *progname;
+  const char *progbuf;
+  int ovsigck;
+  int verbose;
+  int quell_progress;
+  msgfunc avrdude_message;
+};
+
+extern struct libavrdude_context libavrdude_context;
+#endif // LIBAVRDUDE_BUILD
+
+void libavrdude_init(const char *progname, int ovsigck, int verbose,
+                     int quell_progress, msgfunc avrdude_message);
+
+/*
+ * Values returned by library functions.
+ * Some library functions also return a count, i.e. a positive
+ * number greater than 0.
+ */
+#define LIBAVRDUDE_SUCCESS 0
+#define LIBAVRDUDE_GENERAL_FAILURE (-1)
+#define LIBAVRDUDE_NOTSUPPORTED (-2) // operation not supported
+#define LIBAVRDUDE_SOFTFAIL (-3) // returned by avr_signature() if caller
+                                 // might proceed with chip erase
 
 /* formerly lists.h */
 
@@ -949,6 +979,17 @@ void win_usr_config_set(char usr_config[PATH_MAX]);
 #endif
 
 #endif  /* WIN32 */
+
+#ifdef LIBAVRDUDE_BUILD
+// used when building libavrdude itself:
+// map libavrdude_context names to their historical counterparts
+#  define progname libavrdude_context.progname
+#  define progbuf libavrdude_context.progbuf
+#  define ovsigck libavrdude_context.ovsigck
+#  define vrbose libavrdude_context.verbose
+#  define quell_progress libavrdude_context.quell_progress
+#  define avrdude_message libavrdude_context.avrdude_message
+#endif // LIBAVRDUDE_BUILD
 
 
 #endif  /* libavrdude_h */

@@ -35,6 +35,7 @@
 #include <unistd.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "usbasp.h"
@@ -277,7 +278,7 @@ static int usbasp_transmit(PROGRAMMER * pgm,
 {
   int nbytes;
 
-  if (verbose > 3) {
+  if (vrbose > 3) {
     avrdude_message(MSG_TRACE, "%s: usbasp_transmit(\"%s\", 0x%02x, 0x%02x, 0x%02x, 0x%02x)\n",
                     progname,
                     usbasp_get_funcname(functionid), send[0], send[1], send[2], send[3]);
@@ -317,7 +318,7 @@ static int usbasp_transmit(PROGRAMMER * pgm,
   }
 #endif
 
-  if (verbose > 3 && receive && nbytes > 0) {
+  if (vrbose > 3 && receive && nbytes > 0) {
     int i;
     avrdude_message(MSG_TRACE, "%s<= ", progbuf);
     for (i = 0; i < nbytes; i++)
@@ -678,13 +679,13 @@ static int usbasp_spi_cmd(PROGRAMMER * pgm, const unsigned char *cmd,
 {
   avrdude_message(MSG_DEBUG, "%s: usbasp_spi_cmd(0x%02x, 0x%02x, 0x%02x, 0x%02x)%s",
 	    progname, cmd[0], cmd[1], cmd[2], cmd[3],
-	    verbose > 3? "...\n": "");
+	    vrbose > 3? "...\n": "");
 
   int nbytes =
     usbasp_transmit(pgm, 1, USBASP_FUNC_TRANSMIT, cmd, res, 4);
 
   if(nbytes != 4){
-    if (verbose == 3)
+    if (vrbose == 3)
       putc('\n', stderr);
 
     avrdude_message(MSG_INFO, "%s: error: wrong response size\n",

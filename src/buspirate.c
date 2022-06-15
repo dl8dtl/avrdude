@@ -43,6 +43,7 @@
 #include <unistd.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "bitbang.h"

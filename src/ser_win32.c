@@ -34,6 +34,7 @@
 #include <errno.h>   /* ENOTTY */
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 long serial_recv_timeout = 5000; /* ms */
@@ -373,7 +374,7 @@ static int net_send(union filedescriptor *fd, const unsigned char * buf, size_t 
 		return 0;
 	}
 
-	if (verbose > 3) {
+	if (vrbose > 3) {
 		avrdude_message(MSG_TRACE, "%s: Send: ", progname);
 
 		while (buflen) {
@@ -439,7 +440,7 @@ static int ser_send(union filedescriptor *fd, const unsigned char * buf, size_t 
 	if (!len)
   return 0;
 
-	if (verbose > 3)
+	if (vrbose > 3)
 	{
 		avrdude_message(MSG_TRACE, "%s: Send: ", progname);
 
@@ -502,7 +503,7 @@ reselect:
 
 		nfds = select(fd->ifd + 1, &rfds, NULL, NULL, &to2);
 		if (nfds == 0) {
-			if (verbose > 1) {
+			if (vrbose > 1) {
 				avrdude_message(MSG_NOTICE, "%s: ser_recv(): programmer is not responding\n", progname);
 			}
 			return -1;
@@ -549,7 +550,7 @@ reselect:
 
 	p = buf;
 
-	if (verbose > 3) {
+	if (vrbose > 3) {
 		avrdude_message(MSG_TRACE, "%s: Recv: ", progname);
 
 		while (len) {
@@ -617,7 +618,7 @@ static int ser_recv(union filedescriptor *fd, unsigned char * buf, size_t buflen
 
 	p = buf;
 
-	if (verbose > 3)
+	if (vrbose > 3)
 	{
 		avrdude_message(MSG_TRACE, "%s: Recv: ", progname);
 

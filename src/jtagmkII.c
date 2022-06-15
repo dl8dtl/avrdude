@@ -43,6 +43,7 @@
 #include <time.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "crc16.h"
@@ -283,7 +284,7 @@ static void jtagmkII_prmsg(PROGRAMMER * pgm, unsigned char * data, size_t len)
 {
   int i;
 
-  if (verbose >= 4) {
+  if (vrbose >= 4) {
     avrdude_message(MSG_TRACE, "Raw message:\n");
 
     for (i = 0; i < len; i++) {
@@ -579,7 +580,7 @@ static int jtagmkII_recv_frame(PROGRAMMER * pgm, unsigned char **msg,
 	buf[l++] = c;
 	if (state == sCSUM2) {
 	  if (crcverify(buf, msglen + 10)) {
-	    if (verbose >= 9)
+	    if (vrbose >= 9)
 	      avrdude_message(MSG_TRACE2, "%s: jtagmkII_recv(): CRC OK",
 		      progname);
 	    state = sDONE;
@@ -637,7 +638,7 @@ int jtagmkII_recv(PROGRAMMER * pgm, unsigned char **msg) {
        */
       memmove(*msg, *msg + 8, rv);
 
-      if (verbose == 4)
+      if (vrbose == 4)
       {
           int i = rv;
           unsigned char *p = *msg;
@@ -704,10 +705,10 @@ int jtagmkII_getsync(PROGRAMMER * pgm, int mode) {
     if (status <= 0) {
 	    avrdude_message(MSG_INFO, "%s: jtagmkII_getsync() attempt %d of %d: sign-on command: status %d\n",
 		      progname, tries + 1, MAXTRIES, status);
-    } else if (verbose >= 3) {
+    } else if (vrbose >= 3) {
       putc('\n', stderr);
       jtagmkII_prmsg(pgm, resp, status);
-    } else if (verbose == 2)
+    } else if (vrbose == 2)
       avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
 
     if (status > 0) {
@@ -858,17 +859,17 @@ retry:
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_getsync(): "
                     "timeout/error communicating with programmer (status %d)\n",
                     progname, status);
     return -1;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   c = resp[0];
   free(resp);
@@ -906,17 +907,17 @@ static int jtagmkII_chip_erase(PROGRAMMER * pgm, AVRPART * p)
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_chip_erase(): "
                     "timeout/error communicating with programmer (status %d)\n",
                     progname, status);
     return -1;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   c = resp[0];
   free(resp);
@@ -995,17 +996,17 @@ static void jtagmkII_set_devdescr(PROGRAMMER * pgm, AVRPART * p)
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_set_devdescr(): "
                     "timeout/error communicating with programmer (status %d)\n",
                     progname, status);
     return;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   c = resp[0];
   free(resp);
@@ -1073,17 +1074,17 @@ static void jtagmkII_set_xmega_params(PROGRAMMER * pgm, AVRPART * p)
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_set_xmega_params(): "
                     "timeout/error communicating with programmer (status %d)\n",
                     progname, status);
     return;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   c = resp[0];
   free(resp);
@@ -1120,17 +1121,17 @@ static int jtagmkII_reset(PROGRAMMER * pgm, unsigned char flags)
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_reset(): "
                     "timeout/error communicating with programmer (status %d)\n",
                     progname, status);
     return -1;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   c = resp[0];
   free(resp);
@@ -1167,17 +1168,17 @@ static int jtagmkII_program_enable(PROGRAMMER * pgm)
 
     status = jtagmkII_recv(pgm, &resp);
     if (status <= 0) {
-      if (verbose >= 2)
+      if (vrbose >= 2)
 	putc('\n', stderr);
       avrdude_message(MSG_INFO, "%s: jtagmkII_program_enable(): "
                       "timeout/error communicating with programmer (status %d)\n",
                       progname, status);
       return -1;
     }
-    if (verbose >= 3) {
+    if (vrbose >= 3) {
       putc('\n', stderr);
       jtagmkII_prmsg(pgm, resp, status);
-    } else if (verbose == 2)
+    } else if (vrbose == 2)
       avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
     c = resp[0];
     free(resp);
@@ -1221,17 +1222,17 @@ static int jtagmkII_program_disable(PROGRAMMER * pgm)
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_program_disable(): "
                     "timeout/error communicating with programmer (status %d)\n",
                     progname, status);
     return -1;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   c = resp[0];
   free(resp);
@@ -1849,16 +1850,16 @@ void jtagmkII_close(PROGRAMMER * pgm)
 
     status = jtagmkII_recv(pgm, &resp);
     if (status <= 0) {
-      if (verbose >= 2)
+      if (vrbose >= 2)
 	putc('\n', stderr);
       avrdude_message(MSG_INFO, "%s: jtagmkII_close(): "
                       "timeout/error communicating with programmer (status %d)\n",
                       progname, status);
     } else {
-      if (verbose >= 3) {
+      if (vrbose >= 3) {
 	putc('\n', stderr);
 	jtagmkII_prmsg(pgm, resp, status);
-      } else if (verbose == 2)
+      } else if (vrbose == 2)
 	avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
       c = resp[0];
       free(resp);
@@ -1877,17 +1878,17 @@ void jtagmkII_close(PROGRAMMER * pgm)
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_close(): "
                     "timeout/error communicating with programmer (status %d)\n",
                     progname, status);
     return;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   c = resp[0];
   free(resp);
@@ -1962,7 +1963,7 @@ static int jtagmkII_page_erase(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_page_erase(): "
                       "timeout/error communicating with programmer (status %d)\n",
@@ -1977,10 +1978,10 @@ static int jtagmkII_page_erase(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     serial_recv_timeout = otimeout;
     return -1;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   if (resp[0] != RSP_OK) {
     avrdude_message(MSG_INFO, "%s: jtagmkII_page_erase(): "
@@ -2094,7 +2095,7 @@ static int jtagmkII_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 
     status = jtagmkII_recv(pgm, &resp);
     if (status <= 0) {
-      if (verbose >= 2)
+      if (vrbose >= 2)
 	putc('\n', stderr);
       avrdude_message(MSG_INFO, "%s: jtagmkII_paged_write(): "
                         "timeout/error communicating with programmer (status %d)\n",
@@ -2110,10 +2111,10 @@ static int jtagmkII_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
       serial_recv_timeout = otimeout;
       return -1;
     }
-    if (verbose >= 3) {
+    if (vrbose >= 3) {
       putc('\n', stderr);
       jtagmkII_prmsg(pgm, resp, status);
-    } else if (verbose == 2)
+    } else if (vrbose == 2)
       avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
     if (resp[0] != RSP_OK) {
       avrdude_message(MSG_INFO, "%s: jtagmkII_paged_write(): "
@@ -2199,7 +2200,7 @@ static int jtagmkII_paged_load(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 
     status = jtagmkII_recv(pgm, &resp);
     if (status <= 0) {
-      if (verbose >= 2)
+      if (vrbose >= 2)
 	putc('\n', stderr);
       avrdude_message(MSG_INFO, "%s: jtagmkII_paged_load(): "
                         "timeout/error communicating with programmer (status %d)\n",
@@ -2214,10 +2215,10 @@ static int jtagmkII_paged_load(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
       serial_recv_timeout = otimeout;
       return -1;
     }
-    if (verbose >= 3) {
+    if (vrbose >= 3) {
       putc('\n', stderr);
       jtagmkII_prmsg(pgm, resp, status);
-    } else if (verbose == 2)
+    } else if (vrbose == 2)
       avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
     if (resp[0] != RSP_MEMORY) {
       avrdude_message(MSG_INFO, "%s: jtagmkII_paged_load(): "
@@ -2376,7 +2377,7 @@ static int jtagmkII_read_byte(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_read_byte(): "
 	      "timeout/error communicating with programmer (status %d)\n",
@@ -2390,10 +2391,10 @@ static int jtagmkII_read_byte(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
       resp = 0;
     goto fail;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   if (resp[0] != RSP_MEMORY) {
     avrdude_message(MSG_INFO, "%s: jtagmkII_read_byte(): "
@@ -2508,7 +2509,7 @@ static int jtagmkII_write_byte(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_NOTICE2, "%s: jtagmkII_write_byte(): "
 	      "timeout/error communicating with programmer (status %d)\n",
@@ -2520,10 +2521,10 @@ static int jtagmkII_write_byte(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
 	    progname, status);
     goto fail;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   if (resp[0] != RSP_OK) {
     avrdude_message(MSG_INFO, "%s: jtagmkII_write_byte(): "
@@ -2590,17 +2591,17 @@ int jtagmkII_getparm(PROGRAMMER * pgm, unsigned char parm,
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_getparm(): "
 	    "timeout/error communicating with programmer (status %d)\n",
 	    progname, status);
     return -1;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   c = resp[0];
   if (c != RSP_PARAMETER) {
@@ -2661,17 +2662,17 @@ static int jtagmkII_setparm(PROGRAMMER * pgm, unsigned char parm,
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_setparm(): "
 	    "timeout/error communicating with programmer (status %d)\n",
 	    progname, status);
     return -1;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   c = resp[0];
   free(resp);
@@ -3158,7 +3159,7 @@ static int jtagmkII_initialize32(PROGRAMMER * pgm, AVRPART * p)
       return -1;
     status = jtagmkII_recv(pgm, &resp);
     if(status <= 0 || resp[0] != 0x87) {
-      if (verbose >= 2)
+      if (vrbose >= 2)
         putc('\n', stderr);
       avrdude_message(MSG_INFO, "%s: jtagmkII_initialize32(): "
                 "timeout/error communicating with programmer (status %d)\n",
@@ -3174,7 +3175,7 @@ static int jtagmkII_initialize32(PROGRAMMER * pgm, AVRPART * p)
       return -1;
     status = jtagmkII_recv(pgm, &resp);
     if(status <= 0 || resp[0] != 0x87) {
-      if (verbose >= 2)
+      if (vrbose >= 2)
         putc('\n', stderr);
       avrdude_message(MSG_INFO, "%s: jtagmkII_initialize32(): "
                 "timeout/error communicating with programmer (status %d)\n",
@@ -3282,7 +3283,7 @@ static unsigned long jtagmkII_read_SABaddr(PROGRAMMER * pgm, unsigned long addr,
 
   status = jtagmkII_recv(pgm, &resp);
   if(status <= 0 || resp[0] != 0x87) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_read_SABaddr(): "
 	      "timeout/error communicating with programmer (status %d) resp=%x\n",
@@ -3302,7 +3303,7 @@ static unsigned long jtagmkII_read_SABaddr(PROGRAMMER * pgm, unsigned long addr,
   }
 
   if(status != 5) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_read_SABaddr(): "
 	      "wrong number of bytes (status %d)\n",
@@ -3314,8 +3315,8 @@ static unsigned long jtagmkII_read_SABaddr(PROGRAMMER * pgm, unsigned long addr,
   val = b4_to_u32r(&resp[1]);
   free(resp);
 
-  if (verbose) {
-    if (verbose >= 2)
+  if (vrbose) {
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_read_SABaddr(): "
 	      "OCD Register %lx -> %4.4lx\n",
@@ -3341,7 +3342,7 @@ static int jtagmkII_write_SABaddr(PROGRAMMER * pgm, unsigned long addr,
 
   status = jtagmkII_recv(pgm, &resp);
   if(status <= 0 || resp[0] != RSP_OK) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_write_SABaddr(): "
 	      "timeout/error communicating with programmer (status %d)\n",
@@ -3350,8 +3351,8 @@ static int jtagmkII_write_SABaddr(PROGRAMMER * pgm, unsigned long addr,
   }
 
 
-  if (verbose) {
-    if (verbose >= 2)
+  if (vrbose) {
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_write_SABaddr(): "
 	      "OCD Register %lx -> %4.4lx\n",
@@ -3465,17 +3466,17 @@ static void jtagmkII_close32(PROGRAMMER * pgm)
 
   status = jtagmkII_recv(pgm, &resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_INFO, "%s: jtagmkII_close(): "
 	    "timeout/error communicating with programmer (status %d)\n",
 	    progname, status);
     return;
   }
-  if (verbose >= 3) {
+  if (vrbose >= 3) {
     putc('\n', stderr);
     jtagmkII_prmsg(pgm, resp, status);
-  } else if (verbose == 2)
+  } else if (vrbose == 2)
     avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
   c = resp[0];
   free(resp);
@@ -3553,10 +3554,10 @@ static int jtagmkII_paged_load32(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     status = jtagmkII_recv(pgm, &resp);
     if(status<0) {lineno = __LINE__; goto eRR;}
 
-    if (verbose >= 3) {
+    if (vrbose >= 3) {
       putc('\n', stderr);
       jtagmkII_prmsg(pgm, resp, status);
-    } else if (verbose == 2)
+    } else if (vrbose == 2)
       avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
     if (resp[0] != 0x87) {
       avrdude_message(MSG_INFO, "%s: jtagmkII_paged_load32(): "
@@ -3659,10 +3660,10 @@ static int jtagmkII_paged_write32(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
       status = jtagmkII_recv(pgm, &resp);
       if (status<0) {lineno = __LINE__; goto eRR;}
 
-      if (verbose >= 3) {
+      if (vrbose >= 3) {
         putc('\n', stderr);
         jtagmkII_prmsg(pgm, resp, status);
-      } else if (verbose == 2)
+      } else if (vrbose == 2)
         avrdude_message(MSG_NOTICE2, "0x%02x (%d bytes msg)\n", resp[0], status);
       if (resp[0] != RSP_OK) {
         avrdude_message(MSG_INFO, "%s: jtagmkII_paged_write32(): "

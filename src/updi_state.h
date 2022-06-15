@@ -27,6 +27,7 @@
 #ifndef updi_state_h
 #define updi_state_h
 
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 typedef enum

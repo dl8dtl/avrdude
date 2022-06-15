@@ -28,6 +28,7 @@
 #include <unistd.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "dfu.h"
@@ -213,7 +214,7 @@ int dfu_init(struct dfu_dev *dfu, unsigned short vid, unsigned short pid)
     return -1;
   }
 
-  if(verbose)
+  if(vrbose)
     avrdude_message(MSG_INFO, "%s: Found VID=0x%04x PID=0x%04x at %s:%s\n",
                     progname, found->descriptor.idVendor, found->descriptor.idProduct,
                     found->bus->dirname, found->filename);

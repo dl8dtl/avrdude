@@ -27,6 +27,7 @@
 #ifndef updi_link_h
 #define updi_link_h
 
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #ifdef __cplusplus

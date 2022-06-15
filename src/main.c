@@ -53,12 +53,20 @@
 
 
 /* Get VERSION from ac_cfg.h */
-char * version      = VERSION;
+static char * version      = VERSION;
 
-char * progname;
-char   progbuf[PATH_MAX]; /* temporary buffer of spaces the same
+static char * progname;
+static char   progbuf[PATH_MAX]; /* temporary buffer of spaces the same
                              length as progname; used for lining up
                              multiline messages */
+
+/*
+ * global options
+ */
+static int    verbose;     /* verbose output */
+static int    quell_progress; /* un-verebose output */
+static int    ovsigck;     /* 1=override sig check, 0=don't */
+
 
 int avrdude_message(const int msglvl, const char *format, ...)
 {
@@ -86,14 +94,6 @@ static LISTID extended_params = NULL;
 static LISTID additional_config_files = NULL;
 
 static PROGRAMMER * pgm;
-
-/*
- * global options
- */
-int    verbose;     /* verbose output */
-int    quell_progress; /* un-verebose output */
-int    ovsigck;     /* 1=override sig check, 0=don't */
-
 
 
 
@@ -627,6 +627,8 @@ int main(int argc, char * argv [])
     }
 
   }
+
+  libavrdude_init(progname, ovsigck, verbose, quell_progress, avrdude_message);
 
   if (logfile != NULL) {
     FILE *newstderr = freopen(logfile, "w", stderr);

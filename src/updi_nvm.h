@@ -27,6 +27,7 @@
 #ifndef updi_nvm_h
 #define updi_nvm_h
 
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #ifdef __cplusplus

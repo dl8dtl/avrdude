@@ -38,6 +38,7 @@
 #include <hidapi/hidapi.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "usbdevs.h"
@@ -260,7 +261,7 @@ static int usbhid_send(union filedescriptor *fd, const unsigned char *bp, size_t
     avrdude_message(MSG_INFO, "%s: Short write to USB: %d bytes out of %d written\n",
 		    progname, rv, tx_size + 1);
 
-  if (verbose > 4)
+  if (vrbose > 4)
   {
       avrdude_message(MSG_TRACE2, "%s: Sent: ", progname);
 
@@ -297,7 +298,7 @@ static int usbhid_recv(union filedescriptor *fd, unsigned char *buf, size_t nbyt
 		    "%s: Short read, read only %d out of %u bytes\n",
 		    progname, i, nbytes);
 
-  if (verbose > 4)
+  if (vrbose > 4)
   {
       avrdude_message(MSG_TRACE2, "%s: Recv: ", progname);
 

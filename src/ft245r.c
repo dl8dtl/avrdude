@@ -62,6 +62,7 @@
 #include <math.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "bitbang.h"
@@ -807,7 +808,7 @@ static int ft245r_cmd_tpi(PROGRAMMER * pgm, const unsigned char *cmd,
     for (i = 0; i < res_len; ++i)
 	if ((ret = ft245r_tpi_rx(pgm, &res[i])) < 0)
 	    break;
-    if (verbose >= 2) {
+    if (vrbose >= 2) {
 	avrdude_message(MSG_NOTICE2, "%s: [ ", __func__);
 	for (i = 0; i < cmd_len; i++)
 	    avrdude_message(MSG_NOTICE2, "%02X ", cmd[i]);
@@ -855,7 +856,7 @@ static int ft245r_open(PROGRAMMER * pgm, char * port) {
       devnum = 0;
     } else {
       if (strlen(device) == 8 ){ // serial number
-        if (verbose >= 2) {
+        if (vrbose >= 2) {
           avrdude_message(MSG_INFO,
               "%s: ft245r_open(): serial number parsed as: "
               "%s\n",

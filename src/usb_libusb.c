@@ -44,6 +44,7 @@
 #endif
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "usbdevs.h"
@@ -362,7 +363,7 @@ static int usbdev_send(union filedescriptor *fd, const unsigned char *bp, size_t
     mlen -= tx_size;
   } while (mlen > 0);
 
-  if (verbose > 3)
+  if (vrbose > 3)
   {
       avrdude_message(MSG_TRACE, "%s: Sent: ", progname);
 
@@ -438,7 +439,7 @@ static int usbdev_recv(union filedescriptor *fd, unsigned char *buf, size_t nbyt
       i += amnt;
     }
 
-  if (verbose > 4)
+  if (vrbose > 4)
   {
       avrdude_message(MSG_TRACE2, "%s: Recv: ", progname);
 
@@ -547,7 +548,7 @@ static int usbdev_recv_frame(union filedescriptor *fd, unsigned char *buf, size_
 */
 
   printout:
-  if (verbose > 3)
+  if (vrbose > 3)
   {
       i = n & USB_RECV_LENGTH_MASK;
       avrdude_message(MSG_TRACE, "%s: Recv: ", progname);

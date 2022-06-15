@@ -34,6 +34,7 @@
 #include <hidapi/hidapi.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 /* ------------------------------------------------------------------------ */
@@ -257,7 +258,7 @@ static int  chooseDataSize(int len)
 
 static int avrdoper_send(union filedescriptor *fdp, const unsigned char *buf, size_t buflen)
 {
-    if(verbose > 3)
+    if(vrbose > 3)
         dumpBlock("Send", buf, buflen);
     while(buflen > 0){
         unsigned char buffer[256];
@@ -334,7 +335,7 @@ static int avrdoper_recv(union filedescriptor *fdp, unsigned char *buf, size_t b
         remaining -= len;
         avrdoperRxPosition += len;
     }
-    if(verbose > 3)
+    if(vrbose > 3)
         dumpBlock("Receive", buf, buflen);
     return 0;
 }

@@ -29,6 +29,7 @@
 #include <unistd.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "flip2.h"
@@ -304,7 +305,7 @@ int flip2_initialize(PROGRAMMER* pgm, AVRPART *part)
   if (result != 0)
     goto flip2_initialize_fail;
 
-  if (verbose)
+  if (vrbose)
     flip2_show_info(FLIP2(pgm));
 
   return 0;

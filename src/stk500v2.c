@@ -48,6 +48,7 @@
 #include <time.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "stk500_private.h"	// temp until all code converted

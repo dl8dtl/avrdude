@@ -19,6 +19,7 @@
 #ifndef micronucleus_h
 #define micronucleus_h
 
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #ifdef __cplusplus

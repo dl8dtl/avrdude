@@ -27,6 +27,7 @@
 #include <string.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 #include "config.h"
 

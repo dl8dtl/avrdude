@@ -37,6 +37,7 @@
 #include <time.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "crc16.h"
@@ -189,7 +190,7 @@ static void jtag3_prmsg(PROGRAMMER * pgm, unsigned char * data, size_t len)
 {
   int i;
 
-  if (verbose >= 4) {
+  if (vrbose >= 4) {
     avrdude_message(MSG_TRACE, "Raw message:\n");
 
     for (i = 0; i < len; i++) {
@@ -317,7 +318,7 @@ static void jtag3_prevent(PROGRAMMER * pgm, unsigned char * data, size_t len)
 {
   int i;
 
-  if (verbose >= 4) {
+  if (vrbose >= 4) {
     avrdude_message(MSG_TRACE, "Raw event:\n");
 
     for (i = 0; i < len; i++) {
@@ -445,7 +446,7 @@ static int jtag3_edbg_send(PROGRAMMER * pgm, unsigned char * data, size_t len)
   unsigned char status[USBDEV_MAX_XFER_3];
   int rv;
 
-  if (verbose >= 4)
+  if (vrbose >= 4)
     {
       memset(buf, 0, USBDEV_MAX_XFER_3);
       memset(status, 0, USBDEV_MAX_XFER_3);
@@ -531,7 +532,7 @@ static int jtag3_edbg_prepare(PROGRAMMER * pgm)
   avrdude_message(MSG_DEBUG, "\n%s: jtag3_edbg_prepare()\n",
 	    progname);
 
-  if (verbose >= 4)
+  if (vrbose >= 4)
     memset(buf, 0, USBDEV_MAX_XFER_3);
 
   buf[0] = CMSISDAP_CMD_CONNECT;
@@ -589,7 +590,7 @@ static int jtag3_edbg_signoff(PROGRAMMER * pgm)
   avrdude_message(MSG_DEBUG, "\n%s: jtag3_edbg_signoff()\n",
 	    progname);
 
-  if (verbose >= 4)
+  if (vrbose >= 4)
     memset(buf, 0, USBDEV_MAX_XFER_3);
 
   buf[0] = CMSISDAP_CMD_LED;
@@ -660,7 +661,7 @@ static int jtag3_recv_frame(PROGRAMMER * pgm, unsigned char **msg) {
 	    progname);
     return -1;
   }
-  if (verbose >= 4)
+  if (vrbose >= 4)
     memset(buf, 0, pgm->fd.usb.max_xfer);
 
   rv = serial_recv(&pgm->fd, buf, pgm->fd.usb.max_xfer);
@@ -801,7 +802,7 @@ int jtag3_recv(PROGRAMMER * pgm, unsigned char **msg) {
       return rv;
 
     if ((rv & USB_RECV_FLAG_EVENT) != 0) {
-      if (verbose >= 3)
+      if (vrbose >= 3)
 	jtag3_prevent(pgm, *msg, rv & USB_RECV_LENGTH_MASK);
 
       free(*msg);
@@ -846,12 +847,12 @@ int jtag3_recv(PROGRAMMER * pgm, unsigned char **msg) {
 
   status = jtag3_recv(pgm, resp);
   if (status <= 0) {
-    if (verbose >= 2)
+    if (vrbose >= 2)
       putc('\n', stderr);
     avrdude_message(MSG_NOTICE2, "%s: %s command: timeout/error communicating with programmer (status %d)\n",
                     progname, descr, status);
-    return -1;
-  } else if (verbose >= 3) {
+    return LIBAVRDUDE_GENERAL_FAILURE;
+  } else if (vrbose >= 3) {
     putc('\n', stderr);
     jtag3_prmsg(pgm, *resp, status);
   } else {
@@ -2403,7 +2404,7 @@ static void jtag3_print_parms1(PROGRAMMER * pgm, const char * p)
     return;
 
   avrdude_message(MSG_INFO, "%sVtarget         %s: %.2f V\n", p,
-    verbose ? "" : "             ", b2_to_u16(buf) / 1000.0);
+    vrbose ? "" : "             ", b2_to_u16(buf) / 1000.0);
 
   if (jtag3_getparm(pgm, SCOPE_AVR, 1, PARM3_CLK_MEGA_PROG, buf, 2) < 0)
     return;

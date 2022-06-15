@@ -28,15 +28,6 @@
 #define USER_CONF_FILE ".avrduderc"
 #endif
 
-extern char * progname;		/* name of program, for messages */
-extern char progbuf[];		/* spaces same length as progname */
-
-extern int ovsigck;		/* override signature check (-F) */
-extern int verbose;		/* verbosity level (-v, -vv, ...) */
-extern int quell_progress;	/* quietness level (-q, -qq) */
-
-int avrdude_message(const int msglvl, const char *format, ...);
-
 #define MSG_INFO    (0) /* no -v option, can be suppressed with -qq */
 #define MSG_NOTICE  (1) /* displayed with -v */
 #define MSG_NOTICE2 (2) /* displayed with -vv, used rarely */

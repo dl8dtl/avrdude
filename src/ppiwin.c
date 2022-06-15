@@ -46,6 +46,7 @@ reg = register as defined in an enum in ppi.h. This must be converted
 #include <windows.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "ppi.h"

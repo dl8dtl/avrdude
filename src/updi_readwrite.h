@@ -27,6 +27,7 @@
 #ifndef updi_readwrite_h
 #define updi_readwrite_h
 
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #ifdef __cplusplus

@@ -33,6 +33,7 @@
 #include <unistd.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "usbtiny.h"
@@ -228,7 +229,7 @@ static int usbtiny_tpi_tx(PROGRAMMER *pgm, unsigned char b0)
   if (usb_in(pgm, USBTINY_SPI, tpi_frame(b0), 0xffff,
 	     res, sizeof(res), 8 * sizeof(res) * PDATA(pgm)->sck_period) < 0)
     return -1;
-  if (verbose > 1)
+  if (vrbose > 1)
     fprintf(stderr, "CMD_TPI_TX: [0x%02x]\n", b0);
   return 1;
 }
@@ -243,7 +244,7 @@ static int usbtiny_tpi_txtx(PROGRAMMER *pgm,
   if (usb_in(pgm, USBTINY_SPI, tpi_frame(b0), tpi_frame(b1),
 	     res, sizeof(res), 8 * sizeof(res) * PDATA(pgm)->sck_period) < 0)
     return -1;
-  if (verbose > 1)
+  if (vrbose > 1)
     fprintf(stderr, "CMD_TPI_TX_TX: [0x%02x 0x%02x]\n", b0, b1);
   return 1;
 }
@@ -278,7 +279,7 @@ static int usbtiny_tpi_txrx(PROGRAMMER *pgm, unsigned char b0)
     return -1;
   }
 
-  if (verbose > 1)
+  if (vrbose > 1)
     fprintf(stderr, "CMD_TPI_TX_RX: [0x%02x -> 0x%02x]\n", b0, r);
   return r;
 }
@@ -468,7 +469,7 @@ static int usbtiny_initialize (PROGRAMMER *pgm, AVRPART *p )
     /* Since there is a single TPIDATA line, MOSI and MISO must be
        linked together through a 1kOhm resistor.  Verify that
        everything we send on MOSI gets mirrored back on MISO.  */
-    if (verbose >= 2)
+    if (vrbose >= 2)
       fprintf(stderr, "doing MOSI-MISO link check\n");
 
     memset(res, 0xaa, sizeof(res));

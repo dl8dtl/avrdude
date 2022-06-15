@@ -29,6 +29,7 @@
 #include <time.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "tpi.h"
@@ -1285,4 +1286,41 @@ void report_progress (int completed, int total, char *hdr)
 
   if (percent == 100)
     last = 0;                   /* Get ready for next time. */
+}
+
+#undef progname
+#undef progbuf
+#undef ovsigck
+#undef verbose
+#undef quell_progress
+#undef avrdude_message
+
+static int dummy(const int msglvl, const char *format, ...)
+{
+  (void)msglvl;
+  (void)format;
+  return -1;
+}
+
+struct libavrdude_context libavrdude_context =
+{
+  .progname = "*no name*",
+  .progbuf =  "         ",
+  .ovsigck = 0,
+  .verbose = 0,
+  .quell_progress = 0,
+  .avrdude_message = dummy,
+};
+
+void libavrdude_init(const char *progname, int ovsigck, int verbose,
+                     int quell_progress, msgfunc avrdude_message)
+{
+  libavrdude_context.progname = progname;
+  char *progbuf = malloc(strlen(progname));
+  if (progbuf != NULL)
+    libavrdude_context.progbuf = progbuf;
+  libavrdude_context.ovsigck = ovsigck;
+  libavrdude_context.verbose = verbose;
+  libavrdude_context.quell_progress = quell_progress;
+  libavrdude_context.avrdude_message = avrdude_message;
 }

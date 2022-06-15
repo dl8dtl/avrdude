@@ -34,6 +34,7 @@
 #include <stdarg.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "avrftdi.h"
@@ -137,7 +138,7 @@ void avrftdi_log(int level, const char * func, int line,
 	const char *p = fmt;
 	va_list ap;
 
-	if(verbose >= level)
+	if(vrbose >= level)
 	{
 		if(!skip_prefix)
 		{
@@ -603,9 +604,9 @@ static int avrftdi_pin_setup(PROGRAMMER * pgm)
 
 	avrftdi_t* pdata = to_pdata(pgm);
 
-	bool pin_check_mpsse = (0 == avrftdi_check_pins_mpsse(pgm, verbose>3));
+	bool pin_check_mpsse = (0 == avrftdi_check_pins_mpsse(pgm, vrbose>3));
 
-	bool pin_check_bitbanging = (0 == avrftdi_check_pins_bb(pgm, verbose>3));
+	bool pin_check_bitbanging = (0 == avrftdi_check_pins_bb(pgm, vrbose>3));
 
 	if (!pin_check_mpsse && !pin_check_bitbanging) {
 		log_err("No valid pin configuration found.\n");
@@ -922,7 +923,7 @@ avrftdi_lext(PROGRAMMER *pgm, AVRPART *p, AVRMEM *m, unsigned int address)
 	avr_set_bits(m->op[AVR_OP_LOAD_EXT_ADDR], buf);
 	avr_set_addr(m->op[AVR_OP_LOAD_EXT_ADDR], buf, address);
 
-	if(verbose > TRACE)
+	if(vrbose > TRACE)
 		buf_dump(buf, sizeof(buf),
 			 "load extended address command", 0, 16 * 3);
 
@@ -1068,7 +1069,7 @@ static int avrftdi_flash_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 	{
 		buf_size = bufptr - buf;
 
-		if(verbose > TRACE)
+		if(vrbose > TRACE)
 			buf_dump(buf, buf_size, "command buffer", 0, 16*2);
 
 		log_info("Transmitting buffer of size: %d\n", buf_size);
@@ -1151,14 +1152,14 @@ static int avrftdi_flash_read(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 	 * if there was an error, we did not see, memory validation will
 	 * subsequently fail.
 	 */
-	if(verbose > TRACE) {
+	if(vrbose > TRACE) {
 		buf_dump(o_buf, sizeof(o_buf), "o_buf", 0, 32);
 	}
 
 	if (0 > avrftdi_transmit(pgm, MPSSE_DO_READ | MPSSE_DO_WRITE, o_buf, i_buf, len * 4))
 		return -1;
 
-	if(verbose > TRACE) {
+	if(vrbose > TRACE) {
 		buf_dump(i_buf, sizeof(i_buf), "i_buf", 0, 32);
 	}
 
@@ -1177,7 +1178,7 @@ static int avrftdi_flash_read(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 		avr_get_output(readop, &i_buf[byte*4], &m->buf[addr+byte]);
 	}
 
-	if(verbose > TRACE)
+	if(vrbose > TRACE)
 		buf_dump(&m->buf[addr], page_size, "page:", 0, 32);
 
 	return len;

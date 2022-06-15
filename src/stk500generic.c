@@ -32,6 +32,7 @@
 #include <string.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "stk500generic.h"

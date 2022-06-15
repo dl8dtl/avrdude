@@ -48,6 +48,7 @@
 #endif
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 long serial_recv_timeout = 5000; /* ms */
@@ -416,7 +417,7 @@ static int ser_send(union filedescriptor *fd, const unsigned char * buf, size_t 
   if (!len)
     return 0;
 
-  if (verbose > 3)
+  if (vrbose > 3)
   {
       avrdude_message(MSG_TRACE, "%s: Send: ", progname);
 
@@ -501,7 +502,7 @@ static int ser_recv(union filedescriptor *fd, unsigned char * buf, size_t buflen
 
   p = buf;
 
-  if (verbose > 3)
+  if (vrbose > 3)
   {
       avrdude_message(MSG_TRACE, "%s: Recv: ", progname);
 

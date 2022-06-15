@@ -35,6 +35,7 @@
 #include <unistd.h>
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 #include "serialupdi.h"
 #include "updi_link.h"

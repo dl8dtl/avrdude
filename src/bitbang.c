@@ -37,6 +37,7 @@
 #endif
 
 #include "avrdude.h"
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #include "par.h"
@@ -334,7 +335,7 @@ int bitbang_cmd(PROGRAMMER * pgm, const unsigned char *cmd,
     res[i] = bitbang_txrx(pgm, cmd[i]);
   }
 
-    if(verbose >= 2)
+    if(vrbose >= 2)
 	{
         avrdude_message(MSG_NOTICE2, "bitbang_cmd(): [ ");
         for(i = 0; i < 4; i++)
@@ -369,7 +370,7 @@ int bitbang_cmd_tpi(PROGRAMMER * pgm, const unsigned char *cmd,
     res[i] = r;
   }
 
-  if(verbose >= 2)
+  if(vrbose >= 2)
   {
     avrdude_message(MSG_NOTICE2, "bitbang_cmd_tpi(): [ ");
     for(i = 0; i < cmd_len; i++)
@@ -405,7 +406,7 @@ int bitbang_spi(PROGRAMMER * pgm, const unsigned char *cmd,
 
   pgm->setpin(pgm, PIN_LED_PGM, 1);
 
-  if(verbose >= 2)
+  if(vrbose >= 2)
 	{
         avrdude_message(MSG_NOTICE2, "bitbang_cmd(): [ ");
         for(i = 0; i < count; i++)

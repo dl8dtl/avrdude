@@ -21,6 +21,7 @@
 #ifndef term_h
 #define term_h
 
+#define LIBAVRDUDE_BUILD
 #include "libavrdude.h"
 
 #ifdef __cplusplus
