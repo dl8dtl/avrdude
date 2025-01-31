@@ -452,4 +452,6 @@ jobs:
             build/src/avrdude-gui.bat
             build/src/swig_avrdude.py
             build/src/windows.rc
+            src/python/*.ui
+            src/python/*.py
 
