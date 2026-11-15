@@ -665,7 +665,8 @@ int main(int argc, char *argv[]) {
   _set_printf_count_output(1);
 #endif
 #if defined (WIN32)
-  setlocale(LC_CTYPE, ".UTF-8");
+  if(GetACP() == CP_UTF8)
+    setlocale(LC_CTYPE, ".UTF-8");
 #endif
 
   // Set line buffering for file descriptors so we see stdout and stderr properly interleaved
